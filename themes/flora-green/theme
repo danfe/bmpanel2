@@ -7,9 +7,9 @@ theme
 panel
 	position bottom
 	background tile.png
-	
+
 empty 3
-		
+
 desktop_switcher
 	idle
 		left_corner ds-left-idle.png
@@ -17,7 +17,7 @@ desktop_switcher
 		center ds-tile-idle.png
 		right ds-right-idle.png
 		right_corner ds-right-idle.png
-		
+
 	pressed
 		left_corner ds-left-active.png
 		left ds-left-active.png
@@ -60,7 +60,7 @@ taskbar
 		font Arial 8
 			color 230 230 230
 			offset 5 1
-			shadow_color 0 0 0 
+			shadow_color 0 0 0
 			shadow_offset 1 1
 		icon_offset 0 1
 
@@ -75,7 +75,7 @@ taskbar
 			shadow_color 0 0 0
 			shadow_offset 1 1
 		icon_offset 0 1
-	
+
 	pressed
 		stretched
 		left tb-left-active.png
@@ -87,7 +87,7 @@ taskbar
 			shadow_color 70 102 49
 			shadow_offset 1 1
 		icon_offset 0 1
-		
+
 	pressed_highlight
 		stretched
 		left tb-left-active-hover.png
@@ -115,9 +115,9 @@ clock
 		color 255 255 255
 		offset 0 0
 		align center
-		shadow_color 0 0 0 
+		shadow_color 0 0 0
 		shadow_offset 0 0
-		
+
 	time_format %H:%M
-	
+
 empty 5

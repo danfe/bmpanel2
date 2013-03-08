@@ -7,7 +7,7 @@ theme
 panel
 	position bottom
 	background tile.png
-		
+
 empty 3
 
 desktop_switcher
@@ -21,7 +21,7 @@ desktop_switcher
 			color 128 128 128
 			offset 0 0
 			align center
-		
+
 	pressed
 		left_corner empty.png
 		left empty.png
@@ -63,7 +63,7 @@ pager
 
 launchbar
 	icon_size 16 16
-	
+
 empty 5
 
 taskbar
@@ -88,7 +88,7 @@ taskbar
 			shadow_offset 1 1
 			shadow_color 0 0 0
 		icon_offset 0 0
-	
+
 	pressed
 		left tb-left-active.png
 		center tb-tile-active.png
@@ -99,7 +99,7 @@ taskbar
 			shadow_offset 1 1
 			shadow_color 0 0 0
 		icon_offset 1 1
-		
+
 	pressed_highlight
 		left tb-left-active-hover.png
 		center tb-tile-active-hover.png

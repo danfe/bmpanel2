@@ -7,9 +7,9 @@ theme
 panel
 	position bottom
 	background tile.png
-	
+
 empty 3
-		
+
 desktop_switcher
 	idle
 		left_corner tile.png
@@ -21,9 +21,9 @@ desktop_switcher
 			color 153 153 153
 			align center
 			offset 0 0
-			shadow_color 0 0 0 
+			shadow_color 0 0 0
 			shadow_offset 1 1
-		
+
 	pressed
 		left_corner tile.png
 		left tile.png
@@ -65,7 +65,7 @@ pager
 
 launchbar
 	icon_size 16 16
-	
+
 decor separator.png
 
 taskbar
@@ -77,7 +77,7 @@ taskbar
 		font DejaVu Sans condensed 8
 			color 255 255 255
 			offset 5 1
-			shadow_color 0 0 0 
+			shadow_color 0 0 0
 			shadow_offset 1 1
 		icon_offset 0 0
 
@@ -92,7 +92,7 @@ taskbar
 			shadow_color 0 0 0
 			shadow_offset 1 1
 		icon_offset 0 0
-	
+
 	pressed
 		stretched
 		left tb-left-active.png
@@ -104,7 +104,7 @@ taskbar
 			shadow_color 0 0 0
 			shadow_offset 1 1
 		icon_offset 0 0
-		
+
 	pressed_highlight
 		stretched
 		left tb-left-active-hover.png
@@ -132,9 +132,9 @@ clock
 		color 255 255 255
 		offset 0 0
 		align center
-		shadow_color 0 0 0 
+		shadow_color 0 0 0
 		shadow_offset 1 1
-		
+
 	time_format %H:%M
-	
+
 empty 5

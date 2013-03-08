@@ -55,7 +55,7 @@ pager
 	height 21
 	desktop_spacing 5
 
-launchbar 
+launchbar
 	icon_size 24 24
 
 taskbar
