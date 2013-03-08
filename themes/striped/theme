@@ -122,7 +122,17 @@ systray
 
 empty 3
 
-clock	
+temperature
+	font DejaVu Sans condensed bold 9
+		offset 0 0
+		shadow_offset 1 1
+		shadow_color 0 0 0
+		align right
+
+	#sysctl_oid dev.cpu.0.temperature
+empty 3
+
+clock
 	font DejaVu Sans condensed bold 9
 		color 247 247 247
 		offset 0 0
