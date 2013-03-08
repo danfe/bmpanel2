@@ -91,7 +91,7 @@ static void draw(struct widget *w)
 	struct temperature_widget *tw = (struct temperature_widget *)w->private;
 	char buftemp[8];
 	int temp;
-	float tempfraq, r, g, b;
+	float r, g, b;
 
 	temp = get_temperature(tw->sysctl_oid);
 	snprintf(buftemp, sizeof(buftemp), "%d°", temp);
@@ -131,14 +131,7 @@ static void draw(struct widget *w)
 	 * 0%R, 60%G, 100%B (HSV: 200, 100%, 100%) to reddish 100%R, 0%G,
 	 * 0%B (HSV: 0, 100%, 100%) through the hue shift (think rainbow).
 	 */
-#if 0
-	tempfraq = (temp - 30) / 70.0;
-	tw->font.color[0] = 255 * tempfraq;
-	tw->font.color[1] = 153 * (1 - tempfraq);
-	tw->font.color[2] = 255 * (1 - tempfraq);
-#endif
-	tempfraq = (temp - 30) / 70.0;
-	hsv2rgb(.56 * (1 - tempfraq), 1, 1, &r, &g, &b);
+	hsv2rgb(.56 * (1 - (temp - 30) / 70.0), 1, 1, &r, &g, &b);
 	tw->font.color[0] = 255 * r;
 	tw->font.color[1] = 255 * g;
 	tw->font.color[2] = 255 * b;
