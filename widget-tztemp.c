@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#include <math.h>
 
 #include "settings.h"
 #include "builtin-widgets.h"
@@ -10,6 +11,7 @@ static void destroy_widget_private(struct widget *w);
 static void draw(struct widget *w);
 static void clock_tick(struct widget *w);
 static int get_temperature(const char *sysctl_oid);
+static void hsv2rgb(float h, float s, float v, float *r, float *g, float *b);
 
 struct widget_interface tztemp_interface = {
 	.theme_name 		= "tztemp",
@@ -89,7 +91,7 @@ static void draw(struct widget *w)
 	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
 	char buftemp[8];
 	int temp;
-	float tempfraq;
+	float tempfraq, r, g, b;
 
 	temp = get_temperature(tw->sysctl_oid);
 	snprintf(buftemp, sizeof(buftemp), "%d°", temp);
@@ -126,13 +128,20 @@ static void draw(struct widget *w)
 
 	/*
 	 * map temperature (30C~100C) to the text color: from nice blueish
-	 * 0%R, 60%G, 100%B (HSV: 200, 100, 100) to reddish 100%R, 0%G, 0%B
-	 * (HSV: 0, 100, 100)
+	 * 0%R, 60%G, 100%B (HSV: 200, 100%, 100%) to reddish 100%R, 0%G,
+	 * 0%B (HSV: 0, 100%, 100%) through the hue shift (think rainbow).
 	 */
+#if 0
 	tempfraq = (temp - 30) / 70.0;
 	tw->font.color[0] = 255 * tempfraq;
 	tw->font.color[1] = 153 * (1 - tempfraq);
-	tw->font.color[2] = 255 *  (1 - tempfraq);
+	tw->font.color[2] = 255 * (1 - tempfraq);
+#endif
+	tempfraq = (temp - 30) / 70.0;
+	hsv2rgb(.56 * (1 - tempfraq), 1, 1, &r, &g, &b);
+	tw->font.color[0] = 255 * r;
+	tw->font.color[1] = 255 * g;
+	tw->font.color[2] = 255 * b;
 
 	/* text */
 	draw_text(cr, w->panel->layout, &tw->font, buftemp, x, 0,
@@ -162,4 +171,46 @@ static int get_temperature(const char *sysctl_oid)
 	if (sysctlbyname(sysctl_oid, &temp, &len, NULL, 0))
 		return -1;
 	return (temp - 2732) / 10;
+}
+
+static void hsv2rgb(float h, float s, float v, float *r, float *g, float *b)
+{
+	float f, p, q, t;
+	int i;
+
+	/* achromatic case, set level of gray */
+	if (s <= 0) {
+		*r = *g = *b = v;
+		return;
+	}
+
+	h = 6.0 * (h - floorf(h));
+
+	i = (int)truncf(h);		/* should be in the range 0..5 */
+	f = h - i;			/* fractional part */
+	p = v * (1 - s);
+	q = v * (1 - s * f);
+	t = v * (1 - s * (1 - f));
+	
+	switch (i) {
+	case 0:
+		*r = v; *g = t; *b = p;
+		return;
+	case 1:
+		*r = q; *g = v; *b = p;
+		return;
+	case 2:
+		*r = p; *g = v; *b = t;
+		return;
+	case 3:
+		*r = p; *g = q; *b = v;
+		return;
+	case 4:
+		*r = t; *g = p; *b = v;
+		return;
+	case 5:
+	default:			/* to silence compiler warning */
+		*r = v; *g = p; *b = q;
+		return;
+	}
 }
