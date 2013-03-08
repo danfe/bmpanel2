@@ -13,8 +13,8 @@ static void clock_tick(struct widget *w);
 static int get_temperature(const char *sysctl_oid);
 static void hsv2rgb(float h, float s, float v, float *r, float *g, float *b);
 
-struct widget_interface tztemp_interface = {
-	.theme_name 		= "tztemp",
+struct widget_interface temperature_interface = {
+	.theme_name 		= "temperature",
 	.size_type 		= WIDGET_SIZE_CONSTANT,
 	.create_widget_private 	= create_widget_private,
 	.destroy_widget_private = destroy_widget_private,
@@ -26,10 +26,10 @@ struct widget_interface tztemp_interface = {
 int curtemp;
 
 /**************************************************************************
-  TZ Temp "theme" (widget, really)
+  Temperature "theme" (widget, really)
 **************************************************************************/
 
-static int parse_tztemp_theme(struct tztemp_widget *tw,
+static int parse_temperature_theme(struct temperature_widget *tw,
     struct config_format_entry *e, struct config_format_tree *tree)
 {
 	if (parse_text_info_named(&tw->font, "font", e, 1))
@@ -43,16 +43,16 @@ static int parse_tztemp_theme(struct tztemp_widget *tw,
 }
 
 /**************************************************************************
-  TZ Temp interface
+  Temperature interface
 **************************************************************************/
 
 static int create_widget_private(struct widget *w,
     struct config_format_entry *e, struct config_format_tree *tree)
 {
-	struct tztemp_widget *tw = xmallocz(sizeof(struct tztemp_widget));
-	if (parse_tztemp_theme(tw, e, tree)) {
+	struct temperature_widget *tw = xmallocz(sizeof(struct temperature_widget));
+	if (parse_temperature_theme(tw, e, tree)) {
 		xfree(tw);
-		XWARNING("Failed to parse tztemp theme");
+		XWARNING("Failed to parse temperature theme");
 		return -1;
 	}
 
@@ -78,7 +78,7 @@ static int create_widget_private(struct widget *w,
 
 static void destroy_widget_private(struct widget *w)
 {
-	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
+	struct temperature_widget *tw = (struct temperature_widget *)w->private;
 
 	free_triple_image(&tw->background);
 	free_text_info(&tw->font);
@@ -88,7 +88,7 @@ static void destroy_widget_private(struct widget *w)
 
 static void draw(struct widget *w)
 {
-	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
+	struct temperature_widget *tw = (struct temperature_widget *)w->private;
 	char buftemp[8];
 	int temp;
 	float tempfraq, r, g, b;
@@ -150,7 +150,7 @@ static void draw(struct widget *w)
 
 static void clock_tick(struct widget *w)
 {
-	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
+	struct temperature_widget *tw = (struct temperature_widget *)w->private;
 	int temp;
 
 	if ((temp = get_temperature(tw->sysctl_oid)) < 0)

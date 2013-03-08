@@ -94,16 +94,16 @@ struct clock_widget {
 extern struct widget_interface clock_interface;
 
 /**************************************************************************
-  ACPI TZ Temperature (CPU)
+  Temperature (for CPU, etc.)
 **************************************************************************/
 
-struct tztemp_widget {
+struct temperature_widget {
 	struct triple_image background;
 	struct text_info font;
 	char *sysctl_oid;
 };
 
-extern struct widget_interface tztemp_interface;
+extern struct widget_interface temperature_interface;
 
 /**************************************************************************
   Desktop Switcher
