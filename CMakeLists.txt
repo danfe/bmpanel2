@@ -26,6 +26,7 @@ SET(SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/widget-utils.c
 	${CMAKE_CURRENT_SOURCE_DIR}/widget-taskbar.c
 	${CMAKE_CURRENT_SOURCE_DIR}/widget-clock.c
+	${CMAKE_CURRENT_SOURCE_DIR}/widget-tztemp.c
 	${CMAKE_CURRENT_SOURCE_DIR}/widget-decor.c
 	${CMAKE_CURRENT_SOURCE_DIR}/widget-desktops.c
 	${CMAKE_CURRENT_SOURCE_DIR}/widget-pager.c
