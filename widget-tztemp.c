@@ -88,9 +88,11 @@ static void draw(struct widget *w)
 {
 	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
 	char buftemp[8];
+	int temp;
+	float tempfraq;
 
-	snprintf(buftemp, sizeof(buftemp), "%d°",
-	    get_temperature(tw->sysctl_oid));
+	temp = get_temperature(tw->sysctl_oid);
+	snprintf(buftemp, sizeof(buftemp), "%d°", temp);
 
 	/* drawing */
 	cairo_t *cr = w->panel->cr;
@@ -122,9 +124,15 @@ static void draw(struct widget *w)
 		x -= centerw;
 	}
 
-	tw->font.color[0] = 0xff;
-	tw->font.color[1] = 0;
-	tw->font.color[2] = 0;
+	/*
+	 * map temperature (30C~100C) to the text color: from nice blueish
+	 * 0%R, 60%G, 100%B (HSV: 200, 100, 100) to reddish 100%R, 0%G, 0%B
+	 * (HSV: 0, 100, 100)
+	 */
+	tempfraq = (temp - 30) / 70.0;
+	tw->font.color[0] = 255 * tempfraq;
+	tw->font.color[1] = 153 * (1 - tempfraq);
+	tw->font.color[2] = 255 *  (1 - tempfraq);
 
 	/* text */
 	draw_text(cr, w->panel->layout, &tw->font, buftemp, x, 0,
