@@ -61,7 +61,7 @@ static int create_widget_private(struct widget *w,
 	int pics_width = 0;
 
 	/* this should give us enough width for any real temperature */
-	char buftemp[8] = "999°";
+	char buftemp[8] = "99°";
 
 	text_extents(w->panel->layout, tw->font.pfd, buftemp, &text_width, 0);
 
