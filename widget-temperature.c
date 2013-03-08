@@ -61,7 +61,7 @@ static int create_widget_private(struct widget *w,
 	int pics_width = 0;
 
 	/* this should give us enough width for any real temperature */
-	char buftemp[8] = "99°";
+	char buftemp[8] = "999°";
 
 	text_extents(w->panel->layout, tw->font.pfd, buftemp, &text_width, 0);
 
@@ -91,10 +91,16 @@ static void draw(struct widget *w)
 	struct temperature_widget *tw = (struct temperature_widget *)w->private;
 	char buftemp[8];
 	int temp;
+	static int blink;
 	float r, g, b;
 
 	temp = get_temperature(tw->sysctl_oid);
-	snprintf(buftemp, sizeof(buftemp), "%d°", temp);
+	blink = temp > 95 ? !blink : 0;
+
+	if (blink)
+		*buftemp = '\0';
+	else
+		snprintf(buftemp, sizeof(buftemp), "%d°", temp);
 
 	/* drawing */
 	cairo_t *cr = w->panel->cr;
@@ -148,6 +154,9 @@ static void clock_tick(struct widget *w)
 
 	if ((temp = get_temperature(tw->sysctl_oid)) < 0)
 		return;
+
+	if (temp > 95)
+		w->needs_expose = 1;
 
 	if (curtemp == temp)
 		return;
