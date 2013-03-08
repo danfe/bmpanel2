@@ -100,6 +100,7 @@ extern struct widget_interface clock_interface;
 struct tztemp_widget {
 	struct triple_image background;
 	struct text_info font;
+	char *sysctl_oid;
 };
 
 extern struct widget_interface tztemp_interface;

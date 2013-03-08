@@ -1,3 +1,6 @@
+#include <sys/types.h>
+#include <sys/sysctl.h>
+
 #include "settings.h"
 #include "builtin-widgets.h"
 
@@ -6,6 +9,7 @@ static int create_widget_private(struct widget *w,
 static void destroy_widget_private(struct widget *w);
 static void draw(struct widget *w);
 static void clock_tick(struct widget *w);
+static int get_temperature(const char *sysctl_oid);
 
 struct widget_interface tztemp_interface = {
 	.theme_name 		= "tztemp",
@@ -15,6 +19,9 @@ struct widget_interface tztemp_interface = {
 	.draw 			= draw,
 	.clock_tick 		= clock_tick,
 };
+
+/* current temperature */
+int curtemp;
 
 /**************************************************************************
   TZ Temp "theme" (widget, really)
@@ -27,6 +34,8 @@ static int parse_tztemp_theme(struct tztemp_widget *tw,
 		return -1;
 
 	parse_triple_image_named(&tw->background, "background", e, tree, 0);
+	tw->sysctl_oid = parse_string("sysctl_oid", e,
+	    "hw.acpi.thermal.tz0.temperature");
 
 	return 0;
 }
@@ -50,7 +59,7 @@ static int create_widget_private(struct widget *w,
 	int pics_width = 0;
 
 	/* this should give us enough width for any real temperature */
-	char buftemp[128] = "999°";
+	char buftemp[8] = "999°";
 
 	text_extents(w->panel->layout, tw->font.pfd, buftemp, &text_width, 0);
 
@@ -71,15 +80,17 @@ static void destroy_widget_private(struct widget *w)
 
 	free_triple_image(&tw->background);
 	free_text_info(&tw->font);
+	xfree(tw->sysctl_oid);
 	xfree(tw);
 }
 
 static void draw(struct widget *w)
 {
 	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
+	char buftemp[8];
 
-	/* current temperature */
-	char buftemp[128] = "99°";
+	snprintf(buftemp, sizeof(buftemp), "%d°",
+	    get_temperature(tw->sysctl_oid));
 
 	/* drawing */
 	cairo_t *cr = w->panel->cr;
@@ -123,6 +134,24 @@ static void draw(struct widget *w)
 static void clock_tick(struct widget *w)
 {
 	struct tztemp_widget *tw = (struct tztemp_widget *)w->private;
+	int temp;
 
+	if ((temp = get_temperature(tw->sysctl_oid)) < 0)
+		return;
+
+	if (curtemp == temp)
+		return;
+
+	curtemp = temp;
 	w->needs_expose = 1;
+}
+
+static int get_temperature(const char *sysctl_oid)
+{
+	int temp;
+	size_t len = sizeof(temp);
+
+	if (sysctlbyname(sysctl_oid, &temp, &len, NULL, 0))
+		return -1;
+	return (temp - 2732) / 10;
 }
