@@ -137,7 +137,7 @@ static void draw(struct widget *w)
 	 * 0%R, 60%G, 100%B (HSV: 200, 100%, 100%) to reddish 100%R, 0%G,
 	 * 0%B (HSV: 0, 100%, 100%) through the hue shift (think rainbow).
 	 */
-	hsv2rgb(.56 * (1 - (temp - 30) / 70.0), 1, 1, &r, &g, &b);
+	hsv2rgb((200 / 360.0) * (1 - (temp - 30) / 70.0), 1, 1, &r, &g, &b);
 	tw->font.color[0] = 255 * r;
 	tw->font.color[1] = 255 * g;
 	tw->font.color[2] = 255 * b;
