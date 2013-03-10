@@ -26,7 +26,7 @@ struct widget_interface temperature_interface = {
 int curtemp;
 
 /**************************************************************************
-  Temperature "theme" (widget, really)
+  Temperature "theme" (widget, really: no separate theme structure is used)
 **************************************************************************/
 
 static int parse_temperature_theme(struct temperature_widget *tw,

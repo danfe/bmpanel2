@@ -4,7 +4,8 @@ bmpanel2
 bmpanel2 is a NETWM Compliant Panel for X11.
 
 * Look & Feel customization via themes
-* Widgets: Desktop Switcher, Taskbar, Launchbar, System Tray, Clock, Temperature, Decor, empty
+* Widgets: Desktop Switcher, Taskbar, Launchbar, System Tray, Clock,
+  Temperature (for FreeBSD), Decor, empty
 * Pseudo-transparency support
 * Written in C with speed and clarity in mind
 * Small amount of dependencies: glib2, cairo, pango, libX11
