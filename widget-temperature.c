@@ -95,12 +95,11 @@ static void draw(struct widget *w)
 	static int blink;
 	float r, g, b;
 
-	blink = curtemp > 95 ? !blink : 0;
-
-	if (blink)
+	if (blink && curtemp > 95)
 		*buftemp = '\0';
 	else
 		snprintf(buftemp, sizeof(buftemp), "%d°", curtemp);
+	blink = curtemp > 95 ? !blink : 0;
 
 	/* drawing */
 	cairo_t *cr = w->panel->cr;
