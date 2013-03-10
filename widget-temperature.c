@@ -49,7 +49,8 @@ static int parse_temperature_theme(struct temperature_widget *tw,
 static int create_widget_private(struct widget *w,
     struct config_format_entry *e, struct config_format_tree *tree)
 {
-	struct temperature_widget *tw = xmallocz(sizeof(struct temperature_widget));
+	struct temperature_widget *tw = xmallocz(sizeof(*tw));
+
 	if (parse_temperature_theme(tw, e, tree)) {
 		xfree(tw);
 		XWARNING("Failed to parse temperature theme");
@@ -78,7 +79,7 @@ static int create_widget_private(struct widget *w,
 
 static void destroy_widget_private(struct widget *w)
 {
-	struct temperature_widget *tw = (struct temperature_widget *)w->private;
+	struct temperature_widget *tw = w->private;
 
 	free_triple_image(&tw->background);
 	free_text_info(&tw->font);
@@ -88,7 +89,7 @@ static void destroy_widget_private(struct widget *w)
 
 static void draw(struct widget *w)
 {
-	struct temperature_widget *tw = (struct temperature_widget *)w->private;
+	struct temperature_widget *tw = w->private;
 	char buftemp[8];
 	int temp;
 	static int blink;
@@ -149,7 +150,7 @@ static void draw(struct widget *w)
 
 static void clock_tick(struct widget *w)
 {
-	struct temperature_widget *tw = (struct temperature_widget *)w->private;
+	struct temperature_widget *tw = w->private;
 	int temp;
 
 	if ((temp = get_temperature(tw->sysctl_oid)) < 0)
